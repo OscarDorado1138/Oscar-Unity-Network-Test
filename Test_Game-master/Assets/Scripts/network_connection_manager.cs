@@ -206,14 +206,7 @@ public class network_connection_manager : MonoBehaviour {
                     network_info.player_number = buffer[0];
                     network_info.players_in_server = buffer[1];
                     Debug.Log("THIS IS THE CLIENT!!!! Connected)");
-
-
-
-}
-
-
-
-
+                }
                 break;
             case NetworkEventType.ConnectEvent:
                 Debug.Log("found a client");
@@ -221,6 +214,34 @@ public class network_connection_manager : MonoBehaviour {
 
             case NetworkEventType.DisconnectEvent:
                 Debug.Log("Disconnect Event");
+                if (network_info.is_server == true)
+                {
+                    Debug.Log("Server: Disconnect Event");
+                    byte error2;
+                    byte[] message = new byte[100];
+                    message[0] = 1;
+                    message[1] = 2;
+                    message[2] = 3;
+
+                    NetworkTransport.Send(network_server_data.socket, received_connection_ID, network_server_data.reliable_channel, message, 100, out error2);
+
+                    if (error != 0)
+                    {
+                        Debug.Log("Could not send");
+                    }
+                    else
+                    {
+                        Debug.Log("SENT");
+
+                    }
+
+
+
+                }
+                else
+                {
+                    Debug.Log("Client: Disconnect Event");
+                }
                 break;
         }
     }
