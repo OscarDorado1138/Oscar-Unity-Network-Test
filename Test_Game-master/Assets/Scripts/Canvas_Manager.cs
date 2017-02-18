@@ -63,7 +63,7 @@ public class Canvas_Manager : MonoBehaviour {
         Debug.Log(ip_address);
 
         // NETWORK STRUCT UPDATE
-        network_client_connect_request.is_server = false;
+        network_client_connect_request.is_server = true;
         network_client_connect_request.server_ip_address = ip_address;
 
         Destroy(server_client);
