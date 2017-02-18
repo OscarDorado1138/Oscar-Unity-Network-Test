@@ -209,10 +209,11 @@ public class network_connection_manager : MonoBehaviour {
                 // Client looking for Server response
                 if (is_server == false)
                 {
-                    is_connected = true;
-                    player_number = buffer[0];
-                    players_in_server = buffer[1];
-                    Debug.Log("THIS IS THE CLIENT!!!! Connected data)");
+                    Debug.Log("Client recieved data");
+                }
+                else
+                {
+                    Debug.Log("Server recieved data");
                 }
                 break;
             case NetworkEventType.ConnectEvent:
@@ -289,7 +290,7 @@ public class network_connection_manager : MonoBehaviour {
 
     void relay_network_info()
     {
-        Debug.Log("Server: Found Client");
+        Debug.Log("Server Relay");
         byte error;
         byte[] message = new byte[100];
         message[0] = 1;
@@ -314,7 +315,7 @@ public class network_connection_manager : MonoBehaviour {
 
     void client_relay()
     {
-        Debug.Log("Server: Found Client");
+        Debug.Log("Client Relay");
         byte error;
         byte[] message = new byte[100];
         message[0] = 1;
