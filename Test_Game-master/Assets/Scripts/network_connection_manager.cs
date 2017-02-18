@@ -29,7 +29,8 @@ public class network_connection_manager : MonoBehaviour {
     bool is_server = false;
     bool is_connected = false;
 
-    int count = 0;
+    int recieved_con;
+
 
 
     void Start()
@@ -46,13 +47,12 @@ public class network_connection_manager : MonoBehaviour {
     {
         if (listening) // Server is trying to connect to clients OR Client waiting for response
         {
-            if (count == 10)
+            socket_listen();
+
+            if(is_server)
             {
-                socket_listen();
-                count = 0;
+                relay_network_info();
             }
-            count++;
-        
         }
 
 	}
@@ -214,6 +214,8 @@ public class network_connection_manager : MonoBehaviour {
             case NetworkEventType.ConnectEvent:
                 if(is_server == true)
                 {
+                    recieved_con = received_connection_ID;
+
                     Debug.Log("Server: Found Client");
                     byte error2;
                     byte[] message = new byte[100];
@@ -277,6 +279,31 @@ public class network_connection_manager : MonoBehaviour {
                     Debug.Log("Client: Disconnect Event");
                 }
                 break;
+        }
+    }
+
+    void relay_network_info()
+    {
+        Debug.Log("Server: Found Client");
+        byte error;
+        byte[] message = new byte[100];
+        message[0] = 1;
+        message[1] = 2;
+        message[2] = 3;
+        Debug.Log(socket.ToString());
+        Debug.Log(is_server.ToString());
+        Debug.Log(ip_address.ToString());
+
+        NetworkTransport.Send(socket, recieved_con, unreliable_channel, message, 100, out error);
+
+        if (error != 0)
+        {
+            Debug.Log("Could not send");
+        }
+        else
+        {
+            Debug.Log("SENT");
+
         }
     }
 
