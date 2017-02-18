@@ -8,35 +8,31 @@ using System;
 
 public class network_connection_manager : MonoBehaviour {
 
-    public string ip_address;
-    bool is_server = false;
-    //bool connected_to_server = false;
+
 
     bool listening = false;
     network_structs.network_server_data network_server_data;
     network_structs.network_info network_info;
 
+
+    // Update Network Server Data (This is data for the server)
+    public string ip_address = "";
+    int socket = -1;
+    int connection = -1;
+    int reliable_channel = -1;
+    int unreliable_channel = -1;
+    int port = -1;
+    int player_number = -1;
+    int players_in_server = -1;
+
+    // Update Network Info (this is for the local computer)
+    bool is_server = false;
+    bool is_connected = false;
+
+
     void Start()
     {
 
-
-        // Update Network Server Data (This is data for the server)
-        network_server_data.is_server = false;
-        network_server_data.ip_address = "";
-        network_server_data.socket = -1;
-        network_server_data.connection = -1;
-        network_server_data.reliable_channel = -1;
-        network_server_data.unreliable_channel = -1;
-        network_server_data.port = -1;
-        network_server_data.player_number = -1;
-        network_server_data.players_in_server = -1;
-
-
-        // Update Network Info (this is for the local computer)
-        network_info.is_server = false;
-        network_info.is_connected = false;
-        network_info.player_number = -1;
-        network_info.players_in_server = -1;
 
     }
 
@@ -72,7 +68,7 @@ public class network_connection_manager : MonoBehaviour {
 
         if (is_server == true)
         {
-            network_info.is_connected = true;
+            is_connected = true;
         }
         else
         {
@@ -87,8 +83,8 @@ public class network_connection_manager : MonoBehaviour {
     void CLIENT_SERVER_set_network_topology()
     {
         int socket_ID;
-        int reliable_channel;
-        int unreliable_channel;
+        //int reliable_channel;
+        //int unreliable_channel;
         int socket_port_number = 8888;
 
 
@@ -140,13 +136,11 @@ public class network_connection_manager : MonoBehaviour {
         else
         {
             // Update Struct
-            network_server_data.ip_address = ip_address;
-            network_server_data.is_server = is_server;
-            network_server_data.socket = socket_ID;
-            network_server_data.port = socket_port_number;
-            network_server_data.reliable_channel = reliable_channel;
-            network_server_data.unreliable_channel = unreliable_channel;
-
+            //ip_address = ip_address;
+            //is_server = is_server;
+            socket = socket_ID;
+            port = socket_port_number;
+        
             Debug.Log(network_server_data.socket.ToString());
             Debug.Log(socket_ID.ToString());
         }
@@ -160,7 +154,7 @@ public class network_connection_manager : MonoBehaviour {
         byte error;
         int connection;
 
-        connection = NetworkTransport.Connect(network_server_data.socket, ip_address, network_server_data.port, 0, out error);
+        connection = NetworkTransport.Connect(socket, ip_address, port, 0, out error);
         if (error != 0)
         {
             Debug.Log("I FAILED to connect to the server");
@@ -169,7 +163,6 @@ public class network_connection_manager : MonoBehaviour {
         else
         {
             Debug.Log("Client Connected to server");
-            network_server_data.connection = connection;
         }
 
     }
@@ -206,9 +199,9 @@ public class network_connection_manager : MonoBehaviour {
                 // Client looking for Server response
                 if (network_info.is_server == false)
                 {
-                    network_info.is_connected = true;
-                    network_info.player_number = buffer[0];
-                    network_info.players_in_server = buffer[1];
+                    is_connected = true;
+                    player_number = buffer[0];
+                    players_in_server = buffer[1];
                     Debug.Log("THIS IS THE CLIENT!!!! Connected)");
                 }
                 break;
@@ -234,11 +227,11 @@ public class network_connection_manager : MonoBehaviour {
                     message[0] = 1;
                     message[1] = 2;
                     message[2] = 3;
-                    Debug.Log(network_server_data.socket.ToString());
-                    Debug.Log(network_server_data.is_server.ToString());
-                    Debug.Log(network_server_data.ip_address.ToString());
+                    Debug.Log(socket.ToString());
+                    Debug.Log(is_server.ToString());
+                    Debug.Log(ip_address.ToString());
 
-                    NetworkTransport.Send(network_server_data.socket, received_connection_ID, network_server_data.reliable_channel, message, 100, out error2);
+                    NetworkTransport.Send(socket, received_connection_ID, reliable_channel, message, 100, out error2);
 
                     if (error != 0)
                     {
