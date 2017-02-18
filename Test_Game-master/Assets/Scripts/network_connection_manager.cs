@@ -212,7 +212,15 @@ public class network_connection_manager : MonoBehaviour {
                 }
                 break;
             case NetworkEventType.ConnectEvent:
-                Debug.Log("found a client");
+                if(is_server == true)
+                {
+                    Debug.Log("Server: Found Client");
+                }
+                else
+                {
+                    Debug.Log("Client: Found Server");
+
+                }
                 break;
 
             case NetworkEventType.DisconnectEvent:
