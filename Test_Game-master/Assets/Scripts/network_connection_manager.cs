@@ -18,7 +18,7 @@ public class network_connection_manager : MonoBehaviour {
 
     void Start()
     {
-        network_info = network_structs.network_info();
+
 
         // Update Network Server Data (This is data for the server)
         network_server_data.is_server = false;
