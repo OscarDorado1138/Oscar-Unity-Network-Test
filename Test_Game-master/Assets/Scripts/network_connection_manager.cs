@@ -214,7 +214,7 @@ public class network_connection_manager : MonoBehaviour {
 
             case NetworkEventType.DisconnectEvent:
                 Debug.Log("Disconnect Event");
-                if (network_info.is_server == true)
+                if (is_server == true)
                 {
                     Debug.Log("Server: Disconnect Event");
                     byte error2;
