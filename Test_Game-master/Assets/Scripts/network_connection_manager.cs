@@ -253,6 +253,10 @@ public class network_connection_manager : MonoBehaviour {
 
             case NetworkEventType.DisconnectEvent:
                 Debug.Log("Disconnect Event");
+                Debug.Log("Why DISCONNECT");
+                Debug.Log(error.ToString());
+                Debug.Log("^ DISCONNECT");
+
                 if (is_server == true)
                 {
                     Debug.Log("Server: Disconnect Event");
@@ -266,7 +270,7 @@ public class network_connection_manager : MonoBehaviour {
                     Debug.Log(ip_address.ToString());
 
                     NetworkTransport.Send(socket, received_connection_ID, unreliable_channel, message, 100, out error2);
-
+                    /*
                     if (error != 0)
                     {
                         Debug.Log("Could not send");
@@ -276,7 +280,7 @@ public class network_connection_manager : MonoBehaviour {
                         Debug.Log("SENT");
 
                     }
-
+                    */
 
 
                 }
