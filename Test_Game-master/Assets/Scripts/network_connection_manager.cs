@@ -209,6 +209,26 @@ public class network_connection_manager : MonoBehaviour {
                 if(is_server == true)
                 {
                     Debug.Log("Server: Found Client");
+                    byte error2;
+                    byte[] message = new byte[100];
+                    message[0] = 1;
+                    message[1] = 2;
+                    message[2] = 3;
+                    Debug.Log(socket.ToString());
+                    Debug.Log(is_server.ToString());
+                    Debug.Log(ip_address.ToString());
+
+                    NetworkTransport.Send(socket, received_connection_ID, unreliable_channel, message, 100, out error2);
+
+                    if (error != 0)
+                    {
+                        Debug.Log("Could not send");
+                    }
+                    else
+                    {
+                        Debug.Log("SENT");
+
+                    }
                 }
                 else
                 {
@@ -231,7 +251,7 @@ public class network_connection_manager : MonoBehaviour {
                     Debug.Log(is_server.ToString());
                     Debug.Log(ip_address.ToString());
 
-                    NetworkTransport.Send(socket, received_connection_ID, reliable_channel, message, 100, out error2);
+                    NetworkTransport.Send(socket, received_connection_ID, unreliable_channel, message, 100, out error2);
 
                     if (error != 0)
                     {
