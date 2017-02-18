@@ -53,6 +53,10 @@ public class network_connection_manager : MonoBehaviour {
             {
                 relay_network_info();
             }
+            if(is_server == false)
+            {
+                client_relay();
+            }
         }
 
 	}
@@ -102,7 +106,6 @@ public class network_connection_manager : MonoBehaviour {
         /// Add a channel to send and recieve 
         /// Build channel configuration
         ConnectionConfig connection_configuration = new ConnectionConfig();
-        connection_configuration.DisconnectTimeout = 1000;
         unreliable_channel = connection_configuration.AddChannel(QosType.UnreliableSequenced);
         reliable_channel = connection_configuration.AddChannel(QosType.ReliableSequenced);
 
@@ -241,6 +244,7 @@ public class network_connection_manager : MonoBehaviour {
                 }
                 else
                 {
+                    recieved_con = received_connection_ID;
                     Debug.Log("Client: Found Server");
 
                 }
@@ -294,6 +298,28 @@ public class network_connection_manager : MonoBehaviour {
         Debug.Log(socket.ToString());
         Debug.Log(is_server.ToString());
         Debug.Log(ip_address.ToString());
+
+        NetworkTransport.Send(socket, recieved_con, unreliable_channel, message, 100, out error);
+
+        if (error != 0)
+        {
+            Debug.Log("Could not send");
+        }
+        else
+        {
+            Debug.Log("SENT");
+
+        }
+    }
+
+    void client_relay()
+    {
+        Debug.Log("Server: Found Client");
+        byte error;
+        byte[] message = new byte[100];
+        message[0] = 1;
+        message[1] = 2;
+        message[2] = 3;
 
         NetworkTransport.Send(socket, recieved_con, unreliable_channel, message, 100, out error);
 
