@@ -31,6 +31,7 @@ public class network_connection_manager : MonoBehaviour {
 
     int recieved_con;
 
+    int count = 0;
 
 
     void Start()
@@ -49,14 +50,21 @@ public class network_connection_manager : MonoBehaviour {
         {
             socket_listen();
 
-            if(is_server)
+            if (count == 10)
             {
-                relay_network_info();
+
+                if (is_server)
+                {
+                    relay_network_info();
+                }
+                if (is_server == false)
+                {
+                    client_relay();
+                }
+
+                count = 0;
             }
-            if(is_server == false)
-            {
-                client_relay();
-            }
+            count++;
         }
 
 	}
