@@ -18,6 +18,7 @@ public class network_connection_manager : MonoBehaviour {
 
     void Start()
     {
+        network_info = network_structs.network_info();
 
         // Update Network Server Data (This is data for the server)
         network_server_data.is_server = false;
@@ -234,6 +235,9 @@ public class network_connection_manager : MonoBehaviour {
                     message[1] = 2;
                     message[2] = 3;
                     Debug.Log(network_server_data.socket.ToString());
+                    Debug.Log(network_server_data.is_server.ToString());
+                    Debug.Log(network_server_data.ip_address.ToString());
+
                     NetworkTransport.Send(network_server_data.socket, received_connection_ID, network_server_data.reliable_channel, message, 100, out error2);
 
                     if (error != 0)
