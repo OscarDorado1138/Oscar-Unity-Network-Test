@@ -88,6 +88,7 @@ public class network_connection_manager : MonoBehaviour {
         int socket_ID;
         int reliable_channel;
         int unreliable_channel;
+        int socket_port_number = 8888;
 
 
         /// Global Config defines global paramters for network library.
@@ -121,6 +122,7 @@ public class network_connection_manager : MonoBehaviour {
         {
             // Update Struct
             network_server_data.socket = socket_ID;
+            network_server_data.port = socket_port_number;
             network_server_data.reliable_channel = reliable_channel;
             network_server_data.unreliable_channel = unreliable_channel;
         }
@@ -198,7 +200,7 @@ public class network_connection_manager : MonoBehaviour {
                 break;
 
             case NetworkEventType.DisconnectEvent:
-                Debug.Log("this is a test to see of the client gets a disconnect event when the sever drops");
+                Debug.Log("Disconnect Event");
                 break;
         }
     }
