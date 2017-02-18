@@ -102,6 +102,7 @@ public class network_connection_manager : MonoBehaviour {
         /// Add a channel to send and recieve 
         /// Build channel configuration
         ConnectionConfig connection_configuration = new ConnectionConfig();
+        connection_configuration.DisconnectTimeout = 1000;
         unreliable_channel = connection_configuration.AddChannel(QosType.UnreliableSequenced);
         reliable_channel = connection_configuration.AddChannel(QosType.ReliableSequenced);
 
