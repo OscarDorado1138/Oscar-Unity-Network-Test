@@ -145,6 +145,9 @@ public class network_connection_manager : MonoBehaviour {
             network_server_data.port = socket_port_number;
             network_server_data.reliable_channel = reliable_channel;
             network_server_data.unreliable_channel = unreliable_channel;
+
+            Debug.Log(network_server_data.socket.ToString());
+            Debug.Log(socket_ID.ToString());
         }
 
     }
@@ -222,7 +225,7 @@ public class network_connection_manager : MonoBehaviour {
                     message[0] = 1;
                     message[1] = 2;
                     message[2] = 3;
-
+                    Debug.Log(network_server_data.socket.ToString());
                     NetworkTransport.Send(network_server_data.socket, received_connection_ID, network_server_data.reliable_channel, message, 100, out error2);
 
                     if (error != 0)
