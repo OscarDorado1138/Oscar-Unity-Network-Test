@@ -29,6 +29,8 @@ public class network_connection_manager : MonoBehaviour {
     bool is_server = false;
     bool is_connected = false;
 
+    int count = 0;
+
 
     void Start()
     {
@@ -44,8 +46,12 @@ public class network_connection_manager : MonoBehaviour {
     {
         if (listening) // Server is trying to connect to clients OR Client waiting for response
         {
-
-            socket_listen();
+            if (count == 10)
+            {
+                socket_listen();
+                count = 0;
+            }
+            count++;
         
         }
 
