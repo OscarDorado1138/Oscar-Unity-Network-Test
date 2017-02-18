@@ -88,7 +88,7 @@ public class Canvas_Manager : MonoBehaviour {
     public void change_to_join(GameObject server_client)
     {
         // NETWORK STRUCT UPDATE
-        network_client_connect_request.is_server = false;
+        //network_client_connect_request.is_server = false;
 
         Destroy(server_client);
         Instantiate(UI_client_join, transform.position, Quaternion.identity);
@@ -105,6 +105,7 @@ public class Canvas_Manager : MonoBehaviour {
 
         // NETWORK STRUCT UPDATE
         network_client_connect_request.server_ip_address = inserted_ip;
+        network_client_connect_request.is_server = false;
 
 
         if (request == true)

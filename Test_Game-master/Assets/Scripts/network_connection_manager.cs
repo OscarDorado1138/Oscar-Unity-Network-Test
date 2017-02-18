@@ -197,12 +197,12 @@ public class network_connection_manager : MonoBehaviour {
             case NetworkEventType.DataEvent:
 
                 // Client looking for Server response
-                if (network_info.is_server == false)
+                if (is_server == false)
                 {
                     is_connected = true;
                     player_number = buffer[0];
                     players_in_server = buffer[1];
-                    Debug.Log("THIS IS THE CLIENT!!!! Connected)");
+                    Debug.Log("THIS IS THE CLIENT!!!! Connected data)");
                 }
                 break;
             case NetworkEventType.ConnectEvent:
@@ -256,7 +256,7 @@ public class network_connection_manager : MonoBehaviour {
 
     public bool check_connection()
     {
-        return network_info.is_connected;
+        return is_connected;
     }
 
 
