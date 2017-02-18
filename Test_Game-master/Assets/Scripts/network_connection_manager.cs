@@ -106,14 +106,32 @@ public class network_connection_manager : MonoBehaviour {
         /// This topology defines: 
         /// (1) how many connection with default config will be supported/
         /// (2) what will be special connections (connections with config different from default).
-        HostTopology host_topology = new HostTopology(connection_configuration, 1);
+        HostTopology host_topology;
+        if (is_server == true )
+        {
+            int max_connections = 10;
+            host_topology = new HostTopology(connection_configuration, max_connections);
+        }
+        else
+        {
+            host_topology = new HostTopology(connection_configuration, 1);
+        }
 
         /// Initializes the NetworkTransport. 
         /// Should be called before any other operations on the NetworkTransport are done.
         NetworkTransport.Init();
 
         // Open sockets for server and client
-        socket_ID = NetworkTransport.AddHost(host_topology);
+        if (is_server == true)
+        {
+            socket_ID = NetworkTransport.AddHost(host_topology, socket_port_number);
+        }
+        else
+        {
+            socket_ID = NetworkTransport.AddHost(host_topology);
+        }
+
+
         if (socket_ID < 0)
         {
             Debug.Log("Client socket creation failed!");
@@ -121,6 +139,8 @@ public class network_connection_manager : MonoBehaviour {
         else
         {
             // Update Struct
+            network_server_data.ip_address = ip_address;
+            network_server_data.is_server = is_server;
             network_server_data.socket = socket_ID;
             network_server_data.port = socket_port_number;
             network_server_data.reliable_channel = reliable_channel;
