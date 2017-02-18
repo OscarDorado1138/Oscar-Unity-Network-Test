@@ -78,6 +78,8 @@ public class network_connection_manager : MonoBehaviour {
             CLIENT_contact_server(connect_request.server_ip_address);
         }
 
+        listening = true;
+
     } 
 
 
@@ -143,8 +145,6 @@ public class network_connection_manager : MonoBehaviour {
             Debug.Log("Client Connected to server");
             network_server_data.connection = connection;
         }
-
-        listening = true;
 
     }
 
