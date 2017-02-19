@@ -15,7 +15,7 @@ public class Canvas_Manager : MonoBehaviour {
     public GameObject UI_client_join;
     public GameObject UI_client_waiting;
     public GameObject network_connection_manager_prefab;
-    public GameObject network_connection_manager;
+    static GameObject network_connection_manager;
     public GameObject server;
 
 
@@ -27,10 +27,14 @@ public class Canvas_Manager : MonoBehaviour {
     static bool is_a_host = false;
     static string ip_address;
     static string inserted_ip = "";
-    public GameObject client_lobby;
+    static GameObject client_lobby;
+    static GameObject server_lobby;
 
     bool client_connected = false;
-    bool request = false;
+    bool client_in_lobby = false;
+    static bool request = false;
+
+    int players = 0;
 
     // Network Contracts
     network_structs.network_client_connect_request network_client_connect_request;
@@ -45,13 +49,39 @@ public class Canvas_Manager : MonoBehaviour {
     {
         if (request == true)
         {
+            //Debug.Log("here");
+            network_structs.network_info network_update = new network_structs.network_info();
+            network_update = network_connection_manager.GetComponent<network_connection_manager>().network_connection_update();
 
-            client_connected = network_connection_manager.GetComponent<network_connection_manager>().check_connection();
-
-            if (client_connected == true)
+            // Client
+            if (network_update.is_server == false)
             {
-                client_connected_UI();
+                if (network_update.is_connected == true && client_in_lobby == false)
+                {
+                    waiting_in_lobby(network_update.player_number);
+                }
             }
+            // Server
+            if (network_update.is_server == true)
+            {
+                /*
+                Debug.Log("-");
+                Debug.Log(players.ToString());
+                Debug.Log(network_update.players_in_server.ToString());
+                Debug.Log("^");
+                */
+
+                if (players < network_update.players_in_server)
+                {
+                    for (int i = players + 1; i <= network_update.players_in_server; i++ )
+                    {
+                        server_client_joined("Player " + i.ToString());
+
+                    }
+                }
+            }
+
+
         }
 
     }
@@ -68,9 +98,9 @@ public class Canvas_Manager : MonoBehaviour {
 
         Destroy(server_client);
 
-        GameObject s_lobby = Instantiate(UI_server_join, transform.position, Quaternion.identity);
+        server_lobby = Instantiate(UI_server_join, transform.position, Quaternion.identity);
         //GameObject s_lobby = GameObject.Find("Server Lobby(Clone)");
-        GameObject s_lobby_button = s_lobby.transform.Find("Button").gameObject;
+        GameObject s_lobby_button = server_lobby.transform.Find("Button").gameObject;
         GameObject s_lobby_button_text = s_lobby_button.transform.Find("Text").gameObject;
         Text ip_to_display = s_lobby_button_text.GetComponent<Text>();
         ip_to_display.text = "IP Address: " + ip_address;
@@ -83,6 +113,7 @@ public class Canvas_Manager : MonoBehaviour {
 
         network_connection_manager.GetComponent<network_connection_manager>().connect_to_server(network_client_connect_request);
 
+        request = true;
     }
 
     public void change_to_join(GameObject server_client)
@@ -122,17 +153,10 @@ public class Canvas_Manager : MonoBehaviour {
     }
 
 
-    public void client_connected_UI()
-    {
-        
-        Destroy(client_lobby);
-
-        waiting_in_lobby(network_info.player_number);
-    }
 
     public void waiting_in_lobby(int players)
     {
-        
+        Destroy(client_lobby);
         GameObject wait = Instantiate(UI_client_waiting, transform.position, Quaternion.identity);
         GameObject panel = wait.transform.Find("Panel").gameObject;
         GameObject wait_panal = panel.transform.Find("Wait").gameObject;
@@ -140,11 +164,21 @@ public class Canvas_Manager : MonoBehaviour {
         Text give_ip = wait_text.GetComponent<Text>();
         give_ip.text = "Player " + players.ToString() + " in Lobby...";
 
+        client_in_lobby = true;
 
-        //GameObject n_manager = GameObject.Find("Custom Network Manager(Clone)");
-        //network_manager n_manager_script = n_manager.GetComponent<network_manager>();
-        //n_manager_script.started = true;
+    }
 
+    public void server_client_joined(string player_update)
+    {
+        GameObject player = server_lobby.transform.Find(player_update).gameObject;
+        GameObject player_status = player.transform.Find("Player Status").gameObject;
+
+        Text status = player_status.GetComponent<Text>();
+        status.text = player_update + "\nIn Lobby";
+        status.color = new Color(0, 255, 0);
+
+        RawImage image = player.GetComponent<RawImage>();
+        image.color = new Color(0, 255, 0);
     }
 
     public void start_the_game()

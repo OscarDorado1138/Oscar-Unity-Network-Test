@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.Networking;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
@@ -9,27 +10,33 @@ using System;
 public class network_connection_manager : MonoBehaviour {
 
 
-
+    // Client or Server poll socket
     bool listening = false;
-    network_structs.network_server_data network_server_data;
-    network_structs.network_info network_info;
+
+    // Network Info (this is for the local computer)
+    bool is_server = false;
+    bool is_connected = false;
+    string ip_address = "";
+    int player_number = -1;
+    int players_in_server = 1;
 
 
     // Update Network Server Data (This is data for the server)
-    public string ip_address = "";
-    int socket = -1;
-    int connection = -1;
+    int socket_ID = -1;
+    int connection_ID = -1;
     int reliable_channel = -1;
     int unreliable_channel = -1;
     int port = -1;
-    int player_number = -1;
-    int players_in_server = -1;
 
-    // Update Network Info (this is for the local computer)
-    bool is_server = false;
-    bool is_connected = false;
 
-    int recieved_con;
+    // Client data
+    int CLIENT_server_connection = -1;
+
+    // Host data
+    List<network_structs.player_struct> SERVER_client_connections = new List<network_structs.player_struct>();
+
+
+
 
     int count = 0;
 
@@ -48,7 +55,7 @@ public class network_connection_manager : MonoBehaviour {
     {
         if (listening) // Server is trying to connect to clients OR Client waiting for response
         {
-            socket_listen();
+            CLIENT_SERVER_socket_listen();
 
             if (count == 2)
             {
@@ -59,8 +66,10 @@ public class network_connection_manager : MonoBehaviour {
                 }
                 if (is_server == false)
                 {
-                    client_relay();
+                   
                 }
+
+
 
                 count = 0;
             }
@@ -70,13 +79,13 @@ public class network_connection_manager : MonoBehaviour {
 	}
 
 
+    // Network Input/Output functions
 
+    // Function that controls connection set up
+    // Client: Will attempt to connect to server and wait for server confirmation
+    // Server: Open socket and listen for client connections
     public void connect_to_server(network_structs.network_client_connect_request connect_request)
     {
-
-        //network_structs.network_client_connected_response connect_response = new network_structs.network_client_connected_response();
-
-        
                 
         ip_address = connect_request.server_ip_address;
 
@@ -90,20 +99,35 @@ public class network_connection_manager : MonoBehaviour {
         }
         else
         {
-            CLIENT_contact_server(connect_request.server_ip_address);
+            CLIENT_contact_server(ip_address);
         }
 
         listening = true;
 
     } 
 
+    // Function that updates outside script with the connection status of the network
+    public network_structs.network_info network_connection_update()
+    {
+        network_structs.network_info network_info = new network_structs.network_info();
+        network_info.is_server = is_server;
+        network_info.is_connected = is_connected;
+        network_info.ip_address = ip_address;
+        network_info.player_number = player_number;
+        network_info.players_in_server = players_in_server;
+    
+        return network_info;
+    }
 
+
+
+
+
+    // Client/Server function that initializes the network topology
     void CLIENT_SERVER_set_network_topology()
     {
-        int socket_ID;
-        //int reliable_channel;
-        //int unreliable_channel;
-        int socket_port_number = 8888;
+        
+        port = 8888;
 
 
         /// Global Config defines global paramters for network library.
@@ -141,7 +165,7 @@ public class network_connection_manager : MonoBehaviour {
         // Open sockets for server and client
         if (is_server == true)
         {
-            socket_ID = NetworkTransport.AddHost(host_topology, socket_port_number);
+            socket_ID = NetworkTransport.AddHost(host_topology, port);
         }
         else
         {
@@ -151,44 +175,35 @@ public class network_connection_manager : MonoBehaviour {
 
         if (socket_ID < 0)
         {
-            Debug.Log("Client socket creation failed!");
+            Debug.Log("Socket creation failed!");
         }
-        else
-        {
-            // Update Struct
-            //ip_address = ip_address;
-            //is_server = is_server;
-            socket = socket_ID;
-            port = socket_port_number;
-        
-            Debug.Log(network_server_data.socket.ToString());
-            Debug.Log(socket_ID.ToString());
-        }
+
 
     }
 
-
+    // Client Function, Client attempts to contact the server
     void CLIENT_contact_server(string ip_address)
     {
 
         byte error;
         int connection;
 
-        connection = NetworkTransport.Connect(socket, ip_address, port, 0, out error);
+        connection = NetworkTransport.Connect(socket_ID, ip_address, port, 0, out error);
         if (error != 0)
         {
-            Debug.Log("I FAILED to connect to the server");
+            Debug.Log("Client failed to make request to server");
+            Debug.Log("Error number:");
             Debug.Log(error.ToString());
         }
         else
         {
-            Debug.Log("Client Connected to server");
+           // Debug.Log("Client Connected to server");
         }
 
     }
 
 
-    void socket_listen()
+    void CLIENT_SERVER_socket_listen()
     {
 
         byte error;
@@ -196,8 +211,8 @@ public class network_connection_manager : MonoBehaviour {
         int received_connection_ID;
         int received_channel_ID;
         int recieved_buffer_size;
-        byte[] buffer = new byte[100];
-        int buffer_read_size = 100;
+        byte[] buffer = new byte[2];
+        int buffer_read_size = 2;
 
         NetworkEventType network_event = NetworkEventType.DataEvent;
 
@@ -214,146 +229,81 @@ public class network_connection_manager : MonoBehaviour {
         {
             case NetworkEventType.Nothing:
                 break;
-            case NetworkEventType.DataEvent:
 
-                // Client looking for Server response
+            case NetworkEventType.ConnectEvent:
+                // Client connected
                 if (is_server == false)
                 {
-                    Debug.Log("Client recieved data");
+                    //is_connected = true;
+                    //CLIENT_server_connection = received_connection_ID;
                 }
-                else
-                {
-                    Debug.Log("Server recieved data");
-                }
-                break;
-            case NetworkEventType.ConnectEvent:
-                if(is_server == true)
-                {
-                    recieved_con = received_connection_ID;
-
-                    Debug.Log("Server: Found Client");
-                    byte error2;
-                    byte[] message = new byte[100];
-                    message[0] = 1;
-                    message[1] = 2;
-                    message[2] = 3;
-                    Debug.Log(socket.ToString());
-                    Debug.Log(is_server.ToString());
-                    Debug.Log(ip_address.ToString());
-
-                    NetworkTransport.Send(socket, received_connection_ID, unreliable_channel, message, 100, out error2);
-
-                    if (error != 0)
-                    {
-                        Debug.Log("Could not send");
-                    }
-                    else
-                    {
-                        Debug.Log("SENT");
-
-                    }
-                }
-                else
-                {
-                    recieved_con = received_connection_ID;
-                    Debug.Log("Client: Found Server");
-
-                }
-                break;
-
-            case NetworkEventType.DisconnectEvent:
-                Debug.Log("Disconnect Event");
-                Debug.Log("Why DISCONNECT");
-                Debug.Log(error.ToString());
-                Debug.Log("^ DISCONNECT");
 
                 if (is_server == true)
                 {
-                    Debug.Log("Server: Disconnect Event");
-                    byte error2;
-                    byte[] message = new byte[100];
-                    message[0] = 1;
-                    message[1] = 2;
-                    message[2] = 3;
-                    Debug.Log(socket.ToString());
-                    Debug.Log(is_server.ToString());
-                    Debug.Log(ip_address.ToString());
+                    players_in_server++;
+                    network_structs.player_struct player = new network_structs.player_struct();
+                    player.player_number = players_in_server;
+                    player.connection_ID = received_connection_ID;
+                }
 
-                    NetworkTransport.Send(socket, received_connection_ID, unreliable_channel, message, 100, out error2);
-                    /*
-                    if (error != 0)
-                    {
-                        Debug.Log("Could not send");
-                    }
-                    else
-                    {
-                        Debug.Log("SENT");
+                break;
 
-                    }
-                    */
-
-
+            case NetworkEventType.DisconnectEvent:
+                if (is_server == false)
+                {
+                    Debug.Log("Client: Disconnect Event");
                 }
                 else
                 {
-                    Debug.Log("Client: Disconnect Event");
+                    Debug.Log("Server: Disconnect Event");
+                }
+
+                break;
+
+            case NetworkEventType.DataEvent:
+                if (is_server == false)
+                {
+                    Debug.Log("Client recieved data");
+                    player_number = buffer[0];
+                    players_in_server = buffer[1];
+                    is_connected = true;
+                    CLIENT_server_connection = received_connection_ID;
+                }
+                else
+                {
+                    // Server does not need to recieve data from the client
+                    Debug.Log("Server recieved data");
                 }
                 break;
         }
     }
 
+
+
+
+
     void relay_network_info()
     {
-        Debug.Log("Server Relay");
         byte error;
-        byte[] message = new byte[100];
-        message[0] = 1;
-        message[1] = 2;
-        message[2] = 3;
-        Debug.Log(socket.ToString());
-        Debug.Log(is_server.ToString());
-        Debug.Log(ip_address.ToString());
+        byte[] message = new byte[2];
+        int message_size = 2;
+        // Message[0] = player
+        // Message[1] = number of players in the server
 
-        NetworkTransport.Send(socket, recieved_con, unreliable_channel, message, 100, out error);
-
-        if (error != 0)
+        foreach (var player in SERVER_client_connections)
         {
-            Debug.Log("Could not send");
+            message[0] = (byte) player.player_number;
+            message[1] = (byte)players_in_server;
+            NetworkTransport.Send(socket_ID, player.connection_ID, unreliable_channel, message, message_size, out error);
+            if (error != 0)
+            {
+                Debug.Log("Could not send");
+            }
         }
-        else
-        {
-            Debug.Log("SENT");
 
-        }
     }
 
-    void client_relay()
-    {
-        Debug.Log("Client Relay");
-        byte error;
-        byte[] message = new byte[100];
-        message[0] = 1;
-        message[1] = 2;
-        message[2] = 3;
 
-        NetworkTransport.Send(socket, recieved_con, unreliable_channel, message, 100, out error);
-
-        if (error != 0)
-        {
-            Debug.Log("Could not send");
-            Debug.Log(error.ToString());
-        }
-        else
-        {
-            Debug.Log("SENT");
-
-        }
-    }
-
-    public bool check_connection()
-    {
-        return is_connected;
-    }
 
 
 
