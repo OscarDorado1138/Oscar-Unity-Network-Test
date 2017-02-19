@@ -114,8 +114,8 @@ public class network_connection_manager : MonoBehaviour {
         /// Add a channel to send and recieve 
         /// Build channel configuration
         ConnectionConfig connection_configuration = new ConnectionConfig();
-        connection_configuration.PingTimeout = 3000;
-        connection_configuration.DisconnectTimeout = 3000;
+        connection_configuration.PingTimeout = 50000;
+        connection_configuration.DisconnectTimeout = 50000;
         unreliable_channel = connection_configuration.AddChannel(QosType.UnreliableSequenced);
         reliable_channel = connection_configuration.AddChannel(QosType.ReliableSequenced);
 
@@ -341,6 +341,7 @@ public class network_connection_manager : MonoBehaviour {
         if (error != 0)
         {
             Debug.Log("Could not send");
+            Debug.Log(error.ToString());
         }
         else
         {
