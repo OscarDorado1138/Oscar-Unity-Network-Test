@@ -17,23 +17,9 @@ Platform assembly: C:\Users\Oscar\Desktop\Oscar Unity Network Test\Test_Game-mas
 Loading C:\Users\Oscar\Desktop\Oscar Unity Network Test\Test_Game-master\Test Game_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
 Platform assembly: C:\Users\Oscar\Desktop\Oscar Unity Network Test\Test_Game-master\Test Game_Data\Managed\UnityEngine.PlaymodeTestsRunner.dll (this message is harmless)
 Loading C:\Users\Oscar\Desktop\Oscar Unity Network Test\Test_Game-master\Test Game_Data\Managed\UnityEngine.PlaymodeTestsRunner.dll into Unity Child Domain
-- Completed reload, in  0.029 seconds
+- Completed reload, in  0.028 seconds
 Platform assembly: C:\Users\Oscar\Desktop\Oscar Unity Network Test\Test_Game-master\Test Game_Data\Managed\System.Core.dll (this message is harmless)
 Platform assembly: C:\Users\Oscar\Desktop\Oscar Unity Network Test\Test_Game-master\Test Game_Data\Managed\System.dll (this message is harmless)
 desktop: 1920x1080 60Hz; virtual: 1920x1080 at 0,0
 <RI> Initializing input.
 <RI> Input initialized.
-<RI> Initialized touch support.
-UnloadTime: 3.916441 ms
-Setting up 2 worker threads for Enlighten.
-  Thread -> id: 2d80 -> priority: 1 
-  Thread -> id: 4fbc -> priority: 1 
-192.168.0.113
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
-
-Log: cannot connect after 10 attempt address {::ffff:192.168.0.113:0}
-this is a test to see of the client gets a disconnect event when the sever drops
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
-

@@ -197,7 +197,7 @@ public class network_connection_manager : MonoBehaviour {
         }
         else
         {
-           // Debug.Log("Client Connected to server");
+           Debug.Log("Sent Request");
         }
 
     }
@@ -205,7 +205,7 @@ public class network_connection_manager : MonoBehaviour {
 
     void CLIENT_SERVER_socket_listen()
     {
-
+        //Debug.Log("v1");
         byte error;
         int received_host_ID;
         int received_connection_ID;
@@ -234,12 +234,14 @@ public class network_connection_manager : MonoBehaviour {
                 // Client connected
                 if (is_server == false)
                 {
+                    
                     //is_connected = true;
                     //CLIENT_server_connection = received_connection_ID;
                 }
 
                 if (is_server == true)
                 {
+                    Debug.Log("Server: Connection Event");
                     players_in_server++;
                     network_structs.player_struct player = new network_structs.player_struct();
                     player.player_number = players_in_server;
