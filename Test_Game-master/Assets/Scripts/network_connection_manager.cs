@@ -53,7 +53,7 @@ public class network_connection_manager : MonoBehaviour {
     // Update is called once per frame
     void Update ()
     {
-        if (listening) // Server is trying to connect to clients OR Client waiting for response
+        if (listening == true) // Server is trying to connect to clients OR Client waiting for response
         {
            
             CLIENT_SERVER_socket_listen();
@@ -235,7 +235,8 @@ public class network_connection_manager : MonoBehaviour {
                 // Client connected
                 if (is_server == false)
                 {
-                    
+                    Debug.Log("Client: Connection Event");
+
                     //is_connected = true;
                     //CLIENT_server_connection = received_connection_ID;
                 }
