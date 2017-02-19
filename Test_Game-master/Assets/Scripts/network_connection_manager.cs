@@ -55,6 +55,7 @@ public class network_connection_manager : MonoBehaviour {
     {
         if (listening) // Server is trying to connect to clients OR Client waiting for response
         {
+           
             CLIENT_SERVER_socket_listen();
 
             if (count == 2)

@@ -23,3 +23,12 @@ Platform assembly: C:\Users\Oscar\Desktop\Oscar Unity Network Test\Test_Game-mas
 desktop: 1920x1080 60Hz; virtual: 1920x1080 at 0,0
 <RI> Initializing input.
 <RI> Input initialized.
+<RI> Initialized touch support.
+UnloadTime: 1.126436 ms
+Setting up 2 worker threads for Enlighten.
+  Thread -> id: 2788 -> priority: 1 
+  Thread -> id: 5298 -> priority: 1 
+192.168.0.113
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
