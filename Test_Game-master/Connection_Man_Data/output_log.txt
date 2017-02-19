@@ -17,18 +17,23 @@ Platform assembly: C:\Users\Oscar\Desktop\Oscar Unity Network Test\Test_Game-mas
 Loading C:\Users\Oscar\Desktop\Oscar Unity Network Test\Test_Game-master\Connection_Man_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
 Platform assembly: C:\Users\Oscar\Desktop\Oscar Unity Network Test\Test_Game-master\Connection_Man_Data\Managed\UnityEngine.PlaymodeTestsRunner.dll (this message is harmless)
 Loading C:\Users\Oscar\Desktop\Oscar Unity Network Test\Test_Game-master\Connection_Man_Data\Managed\UnityEngine.PlaymodeTestsRunner.dll into Unity Child Domain
-- Completed reload, in  0.163 seconds
+- Completed reload, in  0.027 seconds
 Platform assembly: C:\Users\Oscar\Desktop\Oscar Unity Network Test\Test_Game-master\Connection_Man_Data\Managed\System.Core.dll (this message is harmless)
 Platform assembly: C:\Users\Oscar\Desktop\Oscar Unity Network Test\Test_Game-master\Connection_Man_Data\Managed\System.dll (this message is harmless)
 desktop: 1920x1080 60Hz; virtual: 1920x1080 at 0,0
 <RI> Initializing input.
 <RI> Input initialized.
 <RI> Initialized touch support.
-UnloadTime: 4.218364 ms
+UnloadTime: 3.706464 ms
 Setting up 2 worker threads for Enlighten.
-  Thread -> id: 317c -> priority: 1 
-  Thread -> id: 3ebc -> priority: 1 
-192.168.0.113
+  Thread -> id: 51e0 -> priority: 1 
+  Thread -> id: 4bd0 -> priority: 1 
+Sent Request
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+Log: cannot connect after 10 attempt address {::ffff:192.168.0.100:8888}
+Client: Disconnect Event
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
 
